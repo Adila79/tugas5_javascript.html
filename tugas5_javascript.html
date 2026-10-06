@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Pertemuan 5 JavaScript</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-produk {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ddd;
+        }
+
+        .hapus {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Manajemen Produk Toko Online</h2>
+
+    <div class="form-produk">
+        <input type="text" id="namaProduk" placeholder="Nama Produk">
+        <input type="number" id="hargaProduk" placeholder="Harga">
+        <input type="number" id="stokProduk" placeholder="Stok">
+        <button id="tambahProduk">Tambah Produk</button>
+    </div>
+
+    <div id="daftarProduk"></div>
+
+    <script>
+        let produk = [
+            {
+                id: 1,
+                nama: "Laptop",
+                harga: 7000000,
+                stok: 5
+            },
+            {
+                id: 2,
+                nama: "Mouse",
+                harga: 200000,
+                stok: 10
+            },
+            {
+                id: 3,
+                nama: "Keyboard",
+                harga: 350000,
+                stok: 7
+            },
+            {
+                id: 4,
+                nama: "Monitor",
+                harga: 2500000,
+                stok: 4
+            },
+            {
+                id: 5,
+                nama: "Headset",
+                harga: 500000,
+                stok: 8
+            }
+        ];
+
+        function tampilkanProduk(...dataProduk) {
+            let data = dataProduk.length > 0 ? dataProduk : produk;
+
+            let hasil = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(({ id, nama, harga, stok }) => {
+                hasil += `
+                    <tr>
+                        <td>${id}</td>
+                        <td>${nama}</td>
+                        <td>Rp ${harga.toLocaleString("id-ID")}</td>
+                        <td>${stok}</td>
+                        <td>
+                            <button class="hapus" onclick="hapusProduk(${id})">
+                                Hapus
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            hasil += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById("daftarProduk").innerHTML = hasil;
+        }
+
+        function tambahProduk(nama, harga, stok) {
+            let produkBaru = {
+                id: produk.length + 1,
+                nama,
+                harga,
+                stok
+            };
+
+            produk = [...produk, produkBaru];
+
+            tampilkanProduk();
+        }
+
+        function hapusProduk(id) {
+            produk = produk.filter(item => item.id !== id);
+
+            tampilkanProduk();
+        }
+
+        document.getElementById("tambahProduk").addEventListener("click", function() {
+            let nama = document.getElementById("namaProduk").value;
+            let harga = Number(document.getElementById("hargaProduk").value);
+            let stok = Number(document.getElementById("stokProduk").value);
+
+            if (nama === "" || harga === 0 || stok === 0) {
+                alert("Silakan lengkapi data produk!");
+                return;
+            }
+
+            tambahProduk(nama, harga, stok);
+
+            document.getElementById("namaProduk").value = "";
+            document.getElementById("hargaProduk").value = "";
+            document.getElementById("stokProduk").value = "";
+        });
+
+        tampilkanProduk();
+    </script>
+
+</body>
+</html>
